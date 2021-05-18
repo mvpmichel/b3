@@ -1,11 +1,23 @@
 $fontePadrao: "Oswald", sans-serif;
-$fonteCard: 'Passion One', cursive;
+$fonteCard: "Passion One", cursive;
+$fonteSifrao: 'Marmelad', sans-serif;
 
+$degrade: linear-gradient(
+    90deg,
+    rgba(0, 167, 221, 1) 0%,
+    rgba(0, 53, 118, 1) 100%
+);
+$azul: #276cda;
+$azulInfo: #0F77EA;
 
-
-
-$degrade: linear-gradient(90deg, rgba(0, 53, 118, 1) 0%, rgba(0, 167, 221, 1) 100%);
-$azul: #276CDA;
 $fundoCard: white;
+$cinzaFundo: #808080;
 
-
+[noDeco] {
+    text-decoration: none;
+    color: inherit;
+    &:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+}

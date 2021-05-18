@@ -1,30 +1,83 @@
 <template>
-  <div id="app">
-    <NavHeader />
-    <HomeBroker />
-  </div>
+    <div id="app">
+        <NavHeader />
+
+        <div class="menu">
+            <b-button class="is-info indBtn">ATIVO +</b-button>
+
+            <router-link to="/" noDeco>
+                <b-button class="is-info indBtn">
+                    <i class="fas fa-dollar-sign mr-2"></i>Meus Ativos
+                </b-button>
+            </router-link>
+
+            <span class="mx-5" style="fontSize: 1.6rem">
+                <i class="fas fa-chart-line"></i>
+            </span>
+
+            <router-link to="/Indices" noDeco>
+                <b-button class="is-info indBtn">
+                    Índices<i class="fas fa-chart-area ml-2"></i>
+                </b-button>
+            </router-link>
+
+            <b-button class="is-info indBtn">IBOV 0%</b-button>
+        </div>
+        <transition
+            mode="out-in"
+            enter-active-class="animate__animated animate__zoomIn animate__faster"
+            leave-active-class="animate__animated animate__zoomOut animate__faster"
+        >
+            <router-view />
+        </transition>
+
+        <!-- <Footer /> -->
+    </div>
 </template>
 
 <script>
-
-import NavHeader from './components/NavHeader'
-import HomeBroker from './components/HomeBroker'
+import NavHeader from "./components/NavHeader";
+import Footer from "./components/Footer";
 
 export default {
-  components: { NavHeader, HomeBroker }
-}
-
+    components: { NavHeader, Footer },
+    data() {
+        return {
+            isModalAtivo: false,
+        };
+    },
+};
 </script>
 
-
 <style lang="scss">
+@import "./variables/_variables.scss";
+
 body {
-  background-color: black;
+    background-color: black;
 }
-  #app {
-   
+#app {
     margin: auto;
     background-color: lightgray;
     height: 100vh;
-  }
+
+    .menu {
+        display: flex;
+        background-color: black;
+        justify-content: center;
+        align-items: center;
+        color: white;
+
+        a {
+            margin: 5px;
+            font-family: $fontePadrao;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .indBtn {
+            margin: 5px 10px;
+            font-family: $fontePadrao;
+        }
+    }
+}
 </style>

@@ -1,46 +1,55 @@
 <template>
-    <div class="container-card mt-5 mr-1">
-        <div class="leftSide-container">
-            <div class="leftSideTop-container">
-                <div class="leftTopCard">
-                    <div class="logoCard">
-                        <img src="../assets/logos/CASH3.png" alt="" />
+    <div class="container-card-geral">
+        <div
+            class="container-card mt-5 mr-1"
+            v-for="(ativo, index) in ativos"
+            :key="ativo.ticker"
+        >
+            <div class="leftSide-container">
+                <div class="leftSideTop-container">
+                    <div class="leftTopCard">
+                        <div class="logoCard">
+                            <img
+                                :src="require(`@/assets/logos/${ativo.logo}`)"
+                            />
+                        </div>
+                    </div>
+                    <div class="empresaInfo ml-2">
+                        <span>{{ ativo.ticker }}</span>
+                        <p>{{ ativo.nome }}</p>
                     </div>
                 </div>
-                <div class="empresaInfo ml-2">
-                    <span>{{ papeis[0].ticker }}</span>
-                    <p>{{ papeis[0].nome }}</p>
+                <div class="leftSideBottom-container mt-6">
+                    <div class="infosLP ml-2">
+                        <h4>Lucro/Prejuízo</h4>
+                        <h2>R$ 425 (5%)</h2>
+                    </div>
                 </div>
             </div>
-            <div class="leftSideBottom-container mt-6">
-              <div class="infosLP ml-2">
-                <h4>Lucro/Prejuízo</h4>
-                <h2>R$ 425 (5%)</h2>
-              </div>
-            </div>
-        </div>
-        <div class="rightSide-container">
-            <div style="width: 100%">
-              <div class="qtde separar">
-                <span>Quantidade</span>
-                <span>600</span>
-              </div>            
-              <div class="pm separar mt-1">
-                <span>Preço Médio</span>  
-                <span>R$ 24,95</span>
-              </div>          
-              <div class="precoAtual separar mt-1">
-                <span>Preço Atual</span>
-                <span>R$ 26,16</span>
-              </div>
-              <div class="valorCusto separar mt-1">
-                <span>Valor de Custo</span>
-                <span>R$ 14.795</span>
-              </div>
-              <div class="valorAtual separar mt-1">
-                <span>Valor Atual</span>
-                <span>R$ 15.696</span>
-              </div>
+            <div class="rightSide-container">
+                <div style="width: 100%">
+                    <div class="qtde separar">
+                        <span>Quantidade</span>
+                        <span>{{ ativo.qtde }}</span>
+                        
+                    </div>
+                    <div class="pm separar mt-1">
+                        <span>Preço Médio</span>
+                        <span>R$ 24,95</span>
+                    </div>
+                    <div class="precoAtual separar mt-1">
+                        <span>Preço Atual</span>
+                        <span>{{ ativo.indAtual | dinheiro }}</span>
+                    </div>
+                    <div class="valorCusto separar mt-1">
+                        <span>Valor de Custo</span>
+                        <span>R$ 10</span>
+                    </div>
+                    <div class="valorAtual separar mt-1">
+                        <span>Valor Atual</span>
+                        <span>{{ PatAtual[index] | dinheiro }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -50,109 +59,124 @@
 export default {
     data() {
         return {
-            papeis: [
-                {
-                    ticker: "CASH3",
-                    nome: "MELIUZ",
-                    //logo: url('../assets/logos/CASH3.png')
-                },
-            ],
+            ativos: this.$store.state.papeis,
         };
     },
+    computed: {
+        calcValorCusto() {},
 
-    /* computed: {
-        verificaLP() {
-            return this.lucroPreju >= 0 ? "verde" : "vermelho";
+        calcPM() {},
+
+        calcLP() {},
+
+        /* ValAtual(index) {
+          return this.ativos[index].qtde * this.ativos[index].pAtual
         }, */
+
+        PatAtual() {
+            return this.$store.getters.valorAtual
+        }
+    },
+    methods: {
+    },
 };
 </script>
 
 <style lang="scss">
 @import "@/variables/_variables.scss";
 
-.container-card {
-    min-width: 475px;
-    min-height: 200px;
+.container-card-geral {
     display: flex;
-    border-radius: 10px;
-    padding: 4px;
-    background-color: gray;
+    flex-wrap: wrap;
+    justify-content: center;
 
-    .leftSide-container {
-        padding: 10px;
-        /* flex: 1; */
-        width: 45%;
+    .container-card {
+        min-width: 475px;
+        min-height: 200px;
         display: flex;
-        flex-direction: column;
-        background-color: $fundoCard;
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
+        border-radius: 10px;
+        padding: 4px;
+        background-color: gray;
 
-        .leftSideTop-container {
+        .leftSide-container {
+            padding: 10px;
+            /* width: 45%; */
             display: flex;
-            flex: 1;
+            flex-direction: column;
+            background-color: $fundoCard;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
 
-            .leftTopCard {
-                border-radius: 10px;
+            .leftSideTop-container {
+                display: flex;
+                flex: 1;
 
-                .logoCard {
-                  padding: 4px;
-                    width: 64px;
-                    img {
-                        width: 100%;
+                .leftTopCard {
+                    border-radius: 10px;
+
+                    .logoCard {
+                        :first-child {
+                            border: 1px solid gray;
+                        }
                         border-radius: 10px;
+                        width: 64px;
+
+                        img {
+                            width: 100%;
+                            border-radius: 10px;
+                        }
+                    }
+                }
+
+                .empresaInfo {
+                    display: flex;
+                    flex-direction: column;
+                    span {
+                        font-family: $fonteCard;
+                        color: black;
+                        font-size: 1.35rem;
+                    }
+
+                    p {
+                        font-size: 1.25rem;
+                        font-weight: 500;
                     }
                 }
             }
 
-            .empresaInfo {
-              display: flex;
-              flex-direction: column;
-                span {                   
-                    font-family: $fonteCard;
-                    color: black;
-                    font-size: 1.35rem;
-                }
+            .leftSideBottom-container {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                border-left: 5px solid $azul;
 
-                p {
-                    font-size: 1.25rem;
-                    font-weight: 500;
+                .infosLP {
+                    font-family: $fonteCard;
+                    h2 {
+                        font-size: 1.3rem;
+                        color: $azul;
+                    }
                 }
             }
         }
 
-        .leftSideBottom-container {
-            flex: 1;
+        .rightSide-container {
+            padding: 0 20px;
             display: flex;
             flex-direction: column;
-            border-left: 5px solid $azul;
+            justify-content: center;
+            align-items: center;
+            background-color: $fundoCard;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            flex: 1;
+            font-family: $fonteCard;
 
-            .infosLP {
-              font-family: $fonteCard;
-              h2 {
-                font-size: 1.3rem;
-                color: $azul;
-              }
+            .separar {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid gray;
             }
-        }
-    }
-
-    .rightSide-container {
-        padding: 0 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background-color: $fundoCard;
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
-        flex: 1;
-        font-family: $fonteCard;
-
-        .separar {
-          display: flex;
-          justify-content: space-between;
-          border-bottom: 1px solid gray;
         }
     }
 }
