@@ -6,14 +6,14 @@
                 :key="ativo.ticker"
             >
                 <div class="indice-card-logo mt-5">
-                    <img :src="require(`@/assets/logos/${ativo.logo}`)" />
+                    <img :src="`img/${ativo.logo}`" />
                 </div>
                 <div class="indice-card-empresa">
                     {{ ativo.nome }}
                 </div>
                 <div class="indice-card-valor">
                     <b> R$ </b>
-                    <input type="text" v-model="ativo.indAtual" />
+                    <input type="text" @keyup.enter="submit" v-model.trim="ativo.indAtual" />
                 </div>
             </div>
     </div>
@@ -24,13 +24,7 @@ export default {
     data() {
         return {
             ativos: this.$store.state.papeis,
-            teste: ['teste'],
         };
-    },
-    watch: {
-        teste() {
-            localStorage.setItem('teste', JSON.stringify(this.teste));
-        }
     },
 };
 </script>

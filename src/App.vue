@@ -3,7 +3,7 @@
         <NavHeader />
 
         <div class="menu">
-            <b-button class="is-info indBtn">ATIVO +</b-button>
+            <b-button @click="abrirModal" class="is-info indBtn">Ativo <i class="fas fa-plus-circle"></i></b-button>
 
             <router-link to="/" noDeco>
                 <b-button class="is-info indBtn">
@@ -30,6 +30,7 @@
         >
             <router-view />
         </transition>
+        <ModalAddAtivo />
 
         <!-- <Footer /> -->
     </div>
@@ -37,15 +38,19 @@
 
 <script>
 import NavHeader from "./components/NavHeader";
-import Footer from "./components/Footer";
+import ModalAddAtivo from "./components/ModalAddAtivo";
 
 export default {
-    components: { NavHeader, Footer },
+    components: { NavHeader, ModalAddAtivo },
     data() {
         return {
-            isModalAtivo: false,
         };
     },
+    methods: {
+        abrirModal() {
+            return this.$store.dispatch("abrirFecharModal");
+        },
+    }
 };
 </script>
 

@@ -10,70 +10,96 @@ export default new Vuex.Store({
                 ticker: "LWSA3",
                 nome: "Locaweb",
                 qtde: 600,
-                indAtual: 22.65,
+                indAtual: 23.46,
                 logo: "LWSA3.png",
+                pm: 24.15
             },
             {
-                ticker: "CASH3",
-                nome: "Meliuz",
-                qtde: 200,
-                indAtual: 33.57,
-                logo: "CASH3.png",
+                ticker: "ELET6",
+                nome: "Eletrobrás",
+                qtde: 300,
+                indAtual: 41,
+                logo: "ELET6.png",
+                pm: 41.54
             },
             {
                 ticker: "PETR4",
                 nome: "Petrobrás",
-                qtde: 600,
-                indAtual: 26.66,
+                qtde: 505,
+                indAtual: 25.93,
                 logo: "PETR4.png",
+                pm: 25.22
             },
             {
                 ticker: "IGTA3",
                 nome: "Iguatemi",
                 qtde: 100,
-                indAtual: 43.1,
+                indAtual: 43.07,
                 logo: "IGTA3.png",
-            },
-            {
-                ticker: "LJQQ3",
-                nome: "Quero Quero",
-                qtde: 100,
-                indAtual: 19.8,
-                logo: "LJQQ3.png",
+                pm: 41.93
             },
             {
                 ticker: "AMAR3",
                 nome: "Lojas Marisa",
-                qtde: 1000,
-                indAtual: 6.64,
+                qtde: 1300,
+                indAtual: 6.65,
                 logo: "AMAR3.png",
+                pm: 6.51
             },
             {
-                ticker: "B3SA3",
-                nome: "Brasil Bolsa Balcão",
-                qtde: 200,
-                indAtual: 17.6,
-                logo: "B3SA3.png",
+                ticker: "POSI3",
+                nome: "Positivo",
+                qtde: 100,
+                indAtual: 12.57,
+                logo: "POSI3.png",
+                pm: 12.24
             },
         ],
 
         caixa: 
             {
-                patrimonio: 100000,
-                emCaixa: 4487.42
+                patrimonio: '',
+                emCaixa: 2194.50
             },
+
+        modal: {
+            isAtivo: ''
+        } 
     },
     getters: {
-        valorAtual(state) {
+        calcValorAtual(state) {
             return state.papeis.map((valor) => valor.qtde * valor.indAtual);
         },
-        valorPatTotal(state) {
+        calcValorPatTotal(state) {
             return state.papeis
                 .map((valor) => valor.qtde * valor.indAtual)
                 .reduce((ac, valorAtual) => ac + valorAtual);
         },
+        valorCusto(state) {
+            return state.papeis.map((valor) => valor.pm * valor.qtde)
+        },
+        calcLP(state) {
+            return state.papeis.map((valor) => (valor.qtde * valor.indAtual) - (valor.pm * valor.qtde))
+        },
+        modalState(state){
+            return state.modal.isAtivo
+        }
     },
-    mutations: {},
-    actions: {},
+    mutations: {
+        addPapel(state, papel) {
+            state.papeis.push(papel);
+        },
+        abrirFecharModal(state) {
+            state.modal.isAtivo = !state.modal.isAtivo
+        }
+    },
+    actions: {
+        addPapel(context, papel) {
+            context.commit('addPapel',papel);
+        },
+        abrirFecharModal(context) {
+            context.commit('abrirFecharModal')
+        }
+    },
     modules: {},
 });
