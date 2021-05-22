@@ -31,11 +31,11 @@
                 </div>
                 <div>
                     <div
-                        :class="verificaLP"
+                        :class="calcLP > 0 ? 'azul':'vermelho'"
                         v-if="hide"
-                        style="font-size: .9rem"
+                        style="font-size: 1rem"
                     >
-                        ?
+                        {{ calcLP | dinheiro }}
                     </div>
                     <div v-else>
                         --------
@@ -48,7 +48,7 @@
                     Em Caixa
                 </div>
                 <div>
-                    <div v-if="hide" style="font-size: .9rem">
+                    <div v-if="hide" style="font-size: 1rem; fontFamily: 'Days One'">
                         {{ caixa.emCaixa | dinheiro }}
                     </div>
                     <div v-else>
@@ -63,9 +63,9 @@
                 </div>
                 <div>
                     <div
-                        :class="verificaPat"
+                        :class="calcPT > 0 ? 'azul':'vermelho'"
                         v-if="hide"
-                        style="font-size: .9rem"
+                        style="font-size: 1rem"
                     >
                         {{ calcPT | dinheiro }}
                     </div>
@@ -100,19 +100,17 @@ export default {
         calcPT() {
             return this.caixa.emCaixa + this.somaTotPap;
         },
-        verificaLP() {
-            return this.lucroPreju >= 0 ? "azul" : "vermelho";
-        },
-        verificaPat() {
-            return this.calcPT >= 0 ? "azul" : "vermelho";
-        },
 
         somaTotPap() {
-            return this.$store.getters.valorPatTotal;
+            return this.$store.getters.calcValorPatTotal;
         },
 
         papeis() {
             return this.$store.state.papeis;
+        },
+        calcLP() {
+            const valorCusto = this.$store.getters.valorCusto.reduce((acc, total) => acc + total)
+            return this.$store.getters.calcValorPatTotal - valorCusto
         },
     },
 };
@@ -155,24 +153,24 @@ export default {
 
     .cardValores {
         color: white;
-        font-family: $fontePadrao;
         display: flex;
         flex-direction: column;
         align-content: center;
         justify-content: center;
-        background-color: #29292946;
+        background-color: #292929c4;
         border-radius: 10px;
         min-width: 110px;
         min-height: 68px;
+        font-family: $fonteNav;
     }
 }
 
 .azul {
-    font-weight: 500;
-    color: $azul;
+    font-family: $fonteNum;
+    color: aqua;
 }
 .vermelho {
-    font-weight: 400;
+    font-family: $fonteNum;
     color: tomato;
 }
 

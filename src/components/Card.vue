@@ -9,20 +9,21 @@
                 <div class="leftSideTop-container">
                     <div class="leftTopCard">
                         <div class="logoCard">
-                            <img
-                                :src="require(`@/assets/logos/${ativo.logo}`)"
-                            />
+
+                            <img :src="`img/${ativo.logo}`" alt="">
                         </div>
                     </div>
                     <div class="empresaInfo ml-2">
-                        <span>{{ ativo.ticker }}</span>
-                        <p>{{ ativo.nome }}</p>
+                        <span>{{ ativo.ticker | tickerUper }}</span>
+                        <p>{{ ativo.nome | firstUp }}</p>
                     </div>
                 </div>
                 <div class="leftSideBottom-container mt-6">
                     <div class="infosLP ml-2">
                         <h4>Lucro/Prejuízo</h4>
-                        <h2>R$ 425 (5%)</h2>
+                        <span :class="valorLP[index] > 0 ? 'azul' : 'vermelho'">
+                            {{ valorLP[index] | dinheiro }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -31,11 +32,10 @@
                     <div class="qtde separar">
                         <span>Quantidade</span>
                         <span>{{ ativo.qtde }}</span>
-                        
                     </div>
                     <div class="pm separar mt-1">
                         <span>Preço Médio</span>
-                        <span>R$ 24,95</span>
+                        <span>{{ ativo.pm | dinheiro }}</span>
                     </div>
                     <div class="precoAtual separar mt-1">
                         <span>Preço Atual</span>
@@ -43,11 +43,11 @@
                     </div>
                     <div class="valorCusto separar mt-1">
                         <span>Valor de Custo</span>
-                        <span>R$ 10</span>
+                        <span>{{ calcValorCusto[index] | dinheiro }}</span>
                     </div>
                     <div class="valorAtual separar mt-1">
                         <span>Valor Atual</span>
-                        <span>{{ PatAtual[index] | dinheiro }}</span>
+                        <span>{{ valorAtual[index] | dinheiro }}</span>
                     </div>
                 </div>
             </div>
@@ -63,21 +63,19 @@ export default {
         };
     },
     computed: {
-        calcValorCusto() {},
+        calcValorCusto() {
+            return this.$store.getters.valorCusto;
+        },
 
-        calcPM() {},
-
-        calcLP() {},
-
-        /* ValAtual(index) {
-          return this.ativos[index].qtde * this.ativos[index].pAtual
+        /* calcPM() {
         }, */
 
-        PatAtual() {
-            return this.$store.getters.valorAtual
-        }
-    },
-    methods: {
+        valorAtual() {
+            return this.$store.getters.calcValorAtual;
+        },
+        valorLP() {
+            return this.$store.getters.calcLP;
+        },
     },
 };
 </script>
@@ -100,7 +98,6 @@ export default {
 
         .leftSide-container {
             padding: 10px;
-            /* width: 45%; */
             display: flex;
             flex-direction: column;
             background-color: $fundoCard;
@@ -148,7 +145,8 @@ export default {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                border-left: 5px solid $azul;
+                border-left: 4px solid gray;
+                
 
                 .infosLP {
                     font-family: $fonteCard;
@@ -178,6 +176,15 @@ export default {
                 border-bottom: 1px solid gray;
             }
         }
+    }
+
+    .azul {
+        color: $azul;
+        font-weight: 500;
+    }
+    .vermelho {
+        font-weight: 400;
+        color: tomato;
     }
 }
 </style>
