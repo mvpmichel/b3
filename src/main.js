@@ -4,22 +4,17 @@ import router from './router'
 import store from './store'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+import './plugins/axios'
 import './variables/_variables.scss'
+import { duasCasas, dinheiro, tickerUp, firstUp } from '@/filters/filtros'
 
 
 Vue.use(Buefy)
 
-Vue.filter('dinheiro', valor => {
-	return `R$ ${parseFloat(valor).toFixed(2)}`.replace('.', ',')
-})
-
-Vue.filter('tickerUper', texto => {
-  return texto.toUpperCase()
-})
-
-Vue.filter('firstUp', texto => {
-  return texto[0].toUpperCase() + texto.substr(1)
-})
+Vue.filter('dinheiro', dinheiro)
+Vue.filter('tickerUp', tickerUp)
+Vue.filter('duasCasas', duasCasas)
+Vue.filter('firstUp', firstUp)
 
 Vue.config.productionTip = false
 

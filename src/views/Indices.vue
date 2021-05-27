@@ -19,7 +19,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/variables/_variables.scss";
 
 .container-indices {
     display: flex;

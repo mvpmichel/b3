@@ -9,12 +9,11 @@
                 <div class="leftSideTop-container">
                     <div class="leftTopCard">
                         <div class="logoCard">
-
-                            <img :src="`img/${ativo.logo}`" alt="">
+                            <img :src="`img/${ativo.logo}`" alt="" />
                         </div>
                     </div>
                     <div class="empresaInfo ml-2">
-                        <span>{{ ativo.ticker | tickerUper }}</span>
+                        <span>{{ ativo.ticker | tickerUp }}</span>
                         <p>{{ ativo.nome | firstUp }}</p>
                     </div>
                 </div>
@@ -22,7 +21,10 @@
                     <div class="infosLP ml-2">
                         <h4>Lucro/Prejuízo</h4>
                         <span :class="valorLP[index] > 0 ? 'azul' : 'vermelho'">
-                            {{ valorLP[index] | dinheiro }}
+                            {{ valorLP[index] | dinheiro }} ({{
+                                porcentagem[index] | duasCasas
+                            }}
+                            %)
                         </span>
                     </div>
                 </div>
@@ -57,12 +59,11 @@
 
 <script>
 export default {
-    data() {
-        return {
-            ativos: this.$store.state.papeis,
-        };
-    },
+    props: ["componentKey"],
     computed: {
+        ativos() {
+            return this.$store.state.papeis
+        },
         calcValorCusto() {
             return this.$store.getters.valorCusto;
         },
@@ -76,13 +77,14 @@ export default {
         valorLP() {
             return this.$store.getters.calcLP;
         },
+        porcentagem() {
+            return this.$store.getters.porcLP;
+        },
     },
 };
 </script>
 
 <style lang="scss">
-@import "@/variables/_variables.scss";
-
 .container-card-geral {
     display: flex;
     flex-wrap: wrap;
@@ -146,7 +148,6 @@ export default {
                 display: flex;
                 flex-direction: column;
                 border-left: 4px solid gray;
-                
 
                 .infosLP {
                     font-family: $fonteCard;

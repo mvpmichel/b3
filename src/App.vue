@@ -30,7 +30,6 @@
         >
             <router-view />
         </transition>
-        <ModalAddAtivo />
 
         <!-- <Footer /> -->
     </div>
@@ -38,10 +37,9 @@
 
 <script>
 import NavHeader from "./components/NavHeader";
-import ModalAddAtivo from "./components/ModalAddAtivo";
 
 export default {
-    components: { NavHeader, ModalAddAtivo },
+    components: { NavHeader },
     data() {
         return {
         };
@@ -49,13 +47,20 @@ export default {
     methods: {
         abrirModal() {
             return this.$store.dispatch("abrirFecharModal");
-        },
+        }
+    },
+    created() {
+            this.$http.get("data.json").then((res) => {
+                const retorno = res.data;
+                const papel = Object.values(retorno);
+                this.$store.dispatch("addPapel", papel);
+            }); 
     }
-};
+}
+
 </script>
 
 <style lang="scss">
-@import "./variables/_variables.scss";
 
 body {
     background-color: black;

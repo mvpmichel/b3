@@ -21,8 +21,8 @@
         </template>
 
         <template #end>
-            <b-navbar-item tag="div" @click="hide = !hide" class="icone mr-2">
-                <b-icon :icon="hide ? 'eye' : 'eye-off'" />
+            <b-navbar-item tag="div" @click="ocultar = !ocultar" class="icone mr-2">
+                <b-icon :icon="ocultar ? 'eye' : 'eye-off'" />
             </b-navbar-item>
 
             <b-navbar-item tag="div" class="cardValores mr-2 my-3">
@@ -32,7 +32,7 @@
                 <div>
                     <div
                         :class="calcLP > 0 ? 'azul':'vermelho'"
-                        v-if="hide"
+                        v-if="ocultar"
                         style="font-size: 1rem"
                     >
                         {{ calcLP | dinheiro }}
@@ -48,7 +48,7 @@
                     Em Caixa
                 </div>
                 <div>
-                    <div v-if="hide" style="font-size: 1rem; fontFamily: 'Days One'">
+                    <div v-if="ocultar" style="font-size: 1rem; fontFamily: 'Days One'">
                         {{ caixa.emCaixa | dinheiro }}
                     </div>
                     <div v-else>
@@ -64,7 +64,7 @@
                 <div>
                     <div
                         :class="calcPT > 0 ? 'azul':'vermelho'"
-                        v-if="hide"
+                        v-if="ocultar"
                         style="font-size: 1rem"
                     >
                         {{ calcPT | dinheiro }}
@@ -84,18 +84,10 @@ export default {
     data() {
         return {
             caixa: this.$store.state.caixa,
-            hide: false,
+            ocultar: false
         };
     },
-    watch: {
-        hide() {
-            localStorage.setItem("hide", JSON.stringify(this.hide));
-        },
-    },
-    created() {
-        const json = localStorage.getItem("hide");
-        this.hide = JSON.parse(json);
-    },
+
     computed: {
         calcPT() {
             return this.caixa.emCaixa + this.somaTotPap;
@@ -117,7 +109,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/variables/_variables.scss";
 
 .container-nav {
     background: $degrade;

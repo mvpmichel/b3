@@ -9,7 +9,7 @@
                     <img :src="`img/${ativo.logo}`" />
                 </div>
                 <div class="indice-card-empresa">
-                    {{ ativo.nome }}
+                    {{ ativo.nome | firstUp }}
                 </div>
                 <div class="indice-card-valor">
                     <b> R$ </b>
@@ -30,7 +30,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/variables/_variables.scss";
 
 .container-indiceCard-geral {
     border-radius: 10px;
