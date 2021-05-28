@@ -20,8 +20,10 @@
                             <input
                                 class="input is-small"
                                 type="text"
+                                maxlength="5"
                                 placeholder="Ticker"
                                 v-model="ticker"
+                                @keydown.tab="loadLogo"
                             />
                         </div>
                     </div>
@@ -110,12 +112,6 @@ export default {
             logoPadrao: true,
         };
     },
-    watch: {
-        nome() {
-            this.logo = this.ticker + ".png";
-            this.logoPadrao = false;
-        },
-    },
     computed: {
         lerModal() {
             return this.$store.getters.modalState;
@@ -150,6 +146,10 @@ export default {
             };
             this.$http.post("data.json", papel);
             this.fecharModal();
+        },
+        loadLogo() {
+            this.logoPadrao = false;
+            this.logo = this.ticker + ".png";
         },
     },
 };

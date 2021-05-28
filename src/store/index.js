@@ -11,7 +11,7 @@ export default new Vuex.Store({
         caixa: 
             {
                 patrimonio: '',
-                emCaixa: 535.47
+                emCaixa: 12064.34
             },
 
         modal: {
