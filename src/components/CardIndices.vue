@@ -1,36 +1,58 @@
 <template>
     <div class="container-indiceCard-geral">
-            <div
-                class="container-indice-card"
-                v-for="ativo in ativos"
-                :key="ativo.ticker"
-            >
-                <div class="indice-card-logo mt-5">
-                    <img :src="`img/${ativo.logo}`" />
-                </div>
-                <div class="indice-card-empresa">
-                    {{ ativo.nome | firstUp }}
-                </div>
-                <div class="indice-card-valor">
-                    <b> R$ </b>
-                    <input type="text" @keyup.enter="submit" v-model.trim="ativo.indAtual" />
-                </div>
+        <div
+            class="container-indice-card"
+            v-for="ativo in ativos"
+            :key="ativo.ticker"
+        >
+            <div class="indice-card-logo mt-5">
+                <img :src="`img/${ativo.logo}`" />
             </div>
+            <div class="indice-card-empresa">
+                {{ ativo.nome | firstUp }}
+            </div>
+            <div class="indice-card-valor">
+                <b> R$ </b>
+                <p>{{ indice }}</p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
+    props: ['indRealTime'],
     data() {
         return {
-            ativos: this.$store.state.papeis,
+            indice: '',
         };
+    },
+    computed: {
+        ativos() {
+            return this.$store.state.papeis;
+        },
+    },
+    created() {
+            
+            axios.get(this.indRealTime, {
+                headers: {
+                    "x-rapidapi-key":
+                        "64ca974f09msh9ae7f2bb0908e6fp171a55jsn7c2fe40ccb87",
+                    "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
+                },
+            })
+            .then((res) => {
+                console.log('dentro created cardindices')
+                const dados = res.data;
+                this.indice = dados.quoteResponse.result[0].regularMarketPrice
+            });
     },
 };
 </script>
 
 <style lang="scss">
-
 .container-indiceCard-geral {
     border-radius: 10px;
     display: flex;
@@ -67,8 +89,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 1.2rem;
-        font-family: $fonteSifrao;
+        font-size: 1.2rem
 
         input {
             border: none;
@@ -81,8 +102,8 @@ export default {
     }
 }
 @media (max-width: 1024px) {
-        .container-indiceCard-geral {
-            flex-direction: column;
-        }
+    .container-indiceCard-geral {
+        flex-direction: column;
+    }
 }
 </style>

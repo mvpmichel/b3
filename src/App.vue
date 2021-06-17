@@ -30,13 +30,12 @@
         >
             <router-view />
         </transition>
-
-        <!-- <Footer /> -->
+        
     </div>
 </template>
 
 <script>
-import NavHeader from "./components/NavHeader";
+import NavHeader from "@/components/NavHeader";
 
 export default {
     components: { NavHeader },
@@ -51,10 +50,9 @@ export default {
     },
     created() {
             this.$http.get("data.json").then((res) => {
-                const retorno = res.data;
-                const papel = Object.values(retorno);
+                const papel = res.data;
                 this.$store.dispatch("addPapel", papel);
-            }); 
+            })
     }
 }
 

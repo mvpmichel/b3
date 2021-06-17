@@ -52,18 +52,6 @@
                     </div>
 
                     <div class="field">
-                        <label>Cotação</label>
-                        <div class="control">
-                            <input
-                                class="input is-small"
-                                type="text"
-                                placeholder="Cotação"
-                                v-model="indAtual"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="field">
                         <label>Quantidade</label>
                         <div class="control">
                             <input
@@ -102,12 +90,11 @@
 export default {
     data() {
         return {
-            id: 0,
             ticker: "",
             nome: "",
             qtde: 100,
-            indAtual: "",
             logo: "",
+            indRealTime: "",
             pm: "",
             logoPadrao: true,
         };
@@ -116,35 +103,38 @@ export default {
         lerModal() {
             return this.$store.getters.modalState;
         },
+        papeis() {
+            return this.$store.getters.getPapeis
+        }
     },
     methods: {
         fecharModal() {
             this.$store.dispatch("abrirFecharModal");
             this.limparModal();
-            setTimeout(() => {
-                this.logoPadrao = true;
-            }, 10);
         },
         limparModal() {
             this.nome = "";
             this.ticker = "";
             this.qtde = 100;
-            this.indAtual = "";
             this.pm = "";
             this.logoPadrao = true;
         },
         saveData() {
             const papel = {
-                /* id: this.id +1, */
-                id: 2,
                 ticker: this.ticker,
                 nome: this.nome,
                 qtde: this.qtde,
-                indAtual: this.indAtual,
                 logo: `${this.ticker}.png`,
+                indRealTime: `https://yahoo-finance-low-latency.p.rapidapi.com/v6/finance/quote?symbols=${this.ticker}.SA`,
                 pm: this.pm,
             };
-            this.$http.post("data.json", papel);
+            
+            this.$http.post("data.json", papel).then(() => {
+                this.$http.get("data.json").then((res) => {
+                            const papel = res.data;
+                            this.$store.dispatch("addPapel", papel);
+                        });
+            })
             this.fecharModal();
         },
         loadLogo() {

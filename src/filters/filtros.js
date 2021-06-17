@@ -1,4 +1,4 @@
-export const dinheiro= valor => valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })
+export const dinheiro = valor => valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })
 
 export const duasCasas = valor => parseFloat(valor).toFixed(2)
 

@@ -11,18 +11,24 @@
                 <div class="redes-items">
                     <i class="fab fa-whatsapp"></i>
                 </div>
-            </div>
-        </template>
-
-        <template #start>
-            <div class="img-wrapper">
-                <img src="@/assets/b3.png" />
+                <div class="redes-items">
+                    <a  
+                        href="https://console.firebase.google.com/project/b3trader-c4393/database/b3trader-c4393-default-rtdb/data"
+                        target="_blank"
+                        ><i class="fas fa-database"></i
+                    ></a>
+                </div>
             </div>
         </template>
 
         <template #end>
-            <b-navbar-item tag="div" @click="ocultar = !ocultar" class="icone mr-2">
-                <b-icon :icon="ocultar ? 'eye' : 'eye-off'" />
+            <b-navbar-item tag="div" class="cardValores mr-2 my-3">
+                <div style="flex: 1">
+                    Investimento Inicial
+                </div>
+                <div>
+                    {{ caixa.investimento | dinheiro }}
+                </div>
             </b-navbar-item>
 
             <b-navbar-item tag="div" class="cardValores mr-2 my-3">
@@ -30,15 +36,19 @@
                     Lucro/Prejuízo
                 </div>
                 <div>
-                    <div
-                        :class="calcLP > 0 ? 'azul':'vermelho'"
-                        v-if="ocultar"
-                        style="font-size: 1rem"
-                    >
-                        {{ calcLP | dinheiro }}
+                    <div :class="lucroPrejuizo > 0? 'azul': 'vermelho'" style="font-size: 1rem">
+                        {{ lucroPrejuizo | dinheiro }}
                     </div>
-                    <div v-else>
-                        --------
+                </div>
+            </b-navbar-item>
+
+            <b-navbar-item tag="div" class="cardValores mr-2 my-3">
+                <div style="flex: 1">
+                    Valor Atual
+                </div>
+                <div>
+                    <div :class="lucroPrejuizo > 0? 'azul': 'vermelho'" style="font-size: 1rem">
+                        {{ patrimonioAtual | dinheiro }}
                     </div>
                 </div>
             </b-navbar-item>
@@ -47,13 +57,9 @@
                 <div style="flex: 1">
                     Em Caixa
                 </div>
+
                 <div>
-                    <div v-if="ocultar" style="font-size: 1rem; fontFamily: 'Days One'">
-                        {{ caixa.emCaixa | dinheiro }}
-                    </div>
-                    <div v-else>
-                        --------
-                    </div>
+                    {{ sobrando | dinheiro }}
                 </div>
             </b-navbar-item>
 
@@ -61,18 +67,8 @@
                 <div style="flex: 1">
                     Patrimônio Total
                 </div>
-                <div>
-                    <div
-                        :class="calcPT > 0 ? 'azul':'vermelho'"
-                        v-if="ocultar"
-                        style="font-size: 1rem"
-                    >
-                        {{ calcPT | dinheiro }}
-                    </div>
-
-                    <div v-else>
-                        -----
-                    </div>
+                <div style="font-size: 1rem">
+                    {{ patrimonioTotal | dinheiro }}
                 </div>
             </b-navbar-item>
         </template>
@@ -81,35 +77,28 @@
 
 <script>
 export default {
-    data() {
-        return {
-            caixa: this.$store.state.caixa,
-            ocultar: false
-        };
-    },
-
     computed: {
-        calcPT() {
-            return this.caixa.emCaixa + this.somaTotPap;
+        caixa() {
+            return this.$store.state.caixa;
         },
+        sobrando() {
+            return this.caixa.investimento - this.caixa.custo
+        },
+        patrimonioTotal() {
+            return this.caixa.patrimonio + this.sobrando
+        },
+        lucroPrejuizo(){
+            return this.patrimonioTotal - this.caixa.investimento
+        },
+        patrimonioAtual() {
+            return this.caixa.patrimonio
+        }
 
-        somaTotPap() {
-            return this.$store.getters.calcValorPatTotal;
-        },
-
-        papeis() {
-            return this.$store.state.papeis;
-        },
-        calcLP() {
-            const valorCusto = this.$store.getters.valorCusto.reduce((acc, total) => acc + total)
-            return this.$store.getters.calcValorPatTotal - valorCusto
-        },
     },
 };
 </script>
 
 <style lang="scss">
-
 .container-nav {
     background: $degrade;
 
@@ -117,6 +106,11 @@ export default {
         display: flex;
         align-items: center;
         .redes-items {
+            a {
+                &:visited {
+                    color: inherit;
+                }
+            }
             font-size: 1.6rem;
             color: white;
             padding: 5px;

@@ -5,43 +5,26 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        papeis: '',
-
-
+        papeis: [],
         caixa: 
             {
-                patrimonio: '',
-                emCaixa: 12064.34
+                investimento: 57363.43,
+                patrimonio: 0,
+                custo:0,
+                sobrando: 0
             },
 
         modal: {
-            isAtivo: ''
+            isAtivo: false
         },
     },
     getters: {
-        calcValorAtual(state) {
-            return state.papeis.map((valor) => valor.qtde * valor.indAtual);
-        },
-        calcValorPatTotal(state) {
-            return state.papeis
-                .map((valor) => valor.qtde * valor.indAtual)
-                .reduce((ac, valorAtual) => ac + valorAtual);
-        },
-        valorCusto(state) {
-            return state.papeis.map((valor) => valor.pm * valor.qtde)
-        },
-        calcLP(state) {
-            return state.papeis.map((valor) => (valor.qtde * valor.indAtual) - (valor.pm * valor.qtde))
-        },
-        porcLP(state) {
-            return state.papeis.map((valor) => (((valor.qtde * valor.indAtual)*100)/(valor.pm * valor.qtde))-100)
-        },
         modalState(state){
             return state.modal.isAtivo
         },
         getPapeis(state) {
             return state.papeis
-        }
+        },        
     },
     mutations: {
         addPapel(state, papel) {
@@ -50,8 +33,11 @@ export default new Vuex.Store({
         abrirFecharModal(state) {
             state.modal.isAtivo = !state.modal.isAtivo
         },
-        setComponentKey(state) {
-            state.componentKey += 1
+        valorPatrimonio(state, payload) {
+            state.caixa.patrimonio = payload
+        },
+        valorCusto(state, payload) {
+            state.caixa.custo = payload
         }
     },
     actions: {
@@ -60,7 +46,12 @@ export default new Vuex.Store({
         },
         abrirFecharModal(context) {
             context.commit('abrirFecharModal')
+        },
+        valorPatrimonio(context, payload) {
+            context.commit('valorPatrimonio', payload)
+        },
+        valorCusto(context, payload) {
+            context.commit('valorCusto', payload)
         }
-    },
-    modules: {},
+    }
 });

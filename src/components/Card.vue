@@ -1,55 +1,54 @@
 <template>
     <div class="container-card-geral">
-        <div
-            class="container-card mt-5 mr-1"
-            v-for="(ativo, index) in ativos"
-            :key="ativo.ticker"
-        >
+        <div class="container-card mt-5 mr-1">
             <div class="leftSide-container">
                 <div class="leftSideTop-container">
                     <div class="leftTopCard">
                         <div class="logoCard">
-                            <img :src="`img/${ativo.logo}`" alt="" />
+                            <img :src="`img/${logo}`" alt="" />
                         </div>
                     </div>
                     <div class="empresaInfo ml-2">
-                        <span>{{ ativo.ticker | tickerUp }}</span>
-                        <p>{{ ativo.nome | firstUp }}</p>
+                        <span>{{ ticker | tickerUp }}</span>
+                        <p>{{ nome | firstUp }}</p>
                     </div>
                 </div>
                 <div class="leftSideBottom-container mt-6">
                     <div class="infosLP ml-2">
                         <h4>Lucro/Prejuízo</h4>
-                        <span :class="valorLP[index] > 0 ? 'azul' : 'vermelho'">
-                            {{ valorLP[index] | dinheiro }} ({{
-                                porcentagem[index] | duasCasas
-                            }}
-                            %)
+                        <span :class="getLucroPreju > 0 ? 'azul' : 'vermelho'">
+                            {{ getLucroPreju | dinheiro }} ({{ getPorcentagem | duasCasas }}%)
                         </span>
                     </div>
                 </div>
             </div>
             <div class="rightSide-container">
                 <div style="width: 100%">
-                    <div class="qtde separar">
+                    <div class="containerBtn">
+                        <div class="closeBtn">
+                            <i @click="excluir" class="fas fa-times-circle"></i>
+                        </div>
+                    </div>
+
+                    <div class="qtde separar mt-2">
                         <span>Quantidade</span>
-                        <span>{{ ativo.qtde }}</span>
+                        <span>{{ Number(qtde) }}</span>
                     </div>
                     <div class="pm separar mt-1">
                         <span>Preço Médio</span>
-                        <span>{{ ativo.pm | dinheiro }}</span>
+                        <span>{{ Number(pm) | dinheiro }}</span>
                     </div>
                     <div class="precoAtual separar mt-1">
                         <span>Preço Atual</span>
-                        <span>{{ ativo.indAtual | dinheiro }}</span>
+                        <span>{{ Number(IndiceReal) || 0 | dinheiro }}</span>
                     </div>
                     <div class="valorCusto separar mt-1">
                         <span>Valor de Custo</span>
-                        <span>{{ calcValorCusto[index] | dinheiro }}</span>
+                        <span>{{ getValorCusto | dinheiro }}</span>
                     </div>
                     <div class="valorAtual separar mt-1">
                         <span>Valor Atual</span>
-                        <span>{{ valorAtual[index] | dinheiro }}</span>
+                        <span>{{ Number(getValorTotal) || 0 | dinheiro }}</span>
                     </div>
                 </div>
             </div>
@@ -58,27 +57,58 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    props: ["componentKey"],
+    props: ["logo", "nome", "ticker", "qtde", "pm", "id", "indRealTime", "accPT", "accCusto"],
+    data() {
+        return {
+            IndiceReal: '',
+        }
+    },
+
     computed: {
-        ativos() {
-            return this.$store.state.papeis
+        getValorCusto() {
+            return this.pm * this.qtde;
         },
-        calcValorCusto() {
-            return this.$store.getters.valorCusto;
+        getValorTotal() {
+            return this.qtde * this.IndiceReal;
         },
+        getLucroPreju(){
+            return this.getValorTotal - this.getValorCusto
+        },
+        getPorcentagem() {
+            return ((this.getValorTotal * 100)/this.getValorCusto)-100
+        },
+    },
+    created() {
+        axios.get(this.indRealTime, {
+                headers: {
+                    "x-rapidapi-key":
+                        "64ca974f09msh9ae7f2bb0908e6fp171a55jsn7c2fe40ccb87",
+                    "x-rapidapi-host": "yahoo-finance-low-latency.p.rapidapi.com",
+                },
+            })
+            .then((res) => {
+                    const dados = res.data;
+                    this.IndiceReal = dados.quoteResponse.result[0].regularMarketPrice
+                    this.accPT = this.accPT + (this.qtde * this.IndiceReal)
+                    this.$emit('somaPat', this.accPT)
+                    this.accCusto = this.accCusto + (this.qtde * this.pm)
+                    this.$emit('somaCusto', this.accCusto)
+            })
+    },
 
-        /* calcPM() {
-        }, */
-
-        valorAtual() {
-            return this.$store.getters.calcValorAtual;
-        },
-        valorLP() {
-            return this.$store.getters.calcLP;
-        },
-        porcentagem() {
-            return this.$store.getters.porcLP;
+    methods: {
+        excluir() {
+            if (confirm("Tem certeza que deseja excluir esse ativo?")) {
+                this.$http.delete(`/data/${this.id}.json`).then(() => {
+                    this.$http.get("data.json").then((res) => {
+                        const papel = res.data;
+                        this.$store.dispatch("addPapel", papel);
+                    });
+                });
+            }
         },
     },
 };
@@ -86,11 +116,8 @@ export default {
 
 <style lang="scss">
 .container-card-geral {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-
     .container-card {
+        position: relative;
         min-width: 475px;
         min-height: 200px;
         display: flex;
@@ -170,6 +197,17 @@ export default {
             border-bottom-right-radius: 10px;
             flex: 1;
             font-family: $fonteCard;
+
+            .closeBtn {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+
+                i {
+                    color: red;
+                    cursor: pointer;
+                }
+            }
 
             .separar {
                 display: flex;

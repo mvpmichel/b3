@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Ativos from '@/views/Ativos'
-import Indices from '@/views/Indices'
-import HomeBroker from "@/components/HomeBroker";
+import viewAtivos from '@/views/viewAtivos'
+import viewIndices from '@/views/viewIndices'
 
 
 Vue.use(VueRouter)
@@ -10,13 +9,13 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Ativos',
-    component: HomeBroker
+    name: 'viewAtivos',
+    component: viewAtivos
   },
   {
     path: '/indices',
-    name: 'Indices',
-    component: Indices
+    name: 'viewIndices',
+    component: viewIndices
   },
   
 ]

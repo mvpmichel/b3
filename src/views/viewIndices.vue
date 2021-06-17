@@ -4,9 +4,19 @@
             <span>Índices</span>
             <i class="fas fa-chart-area ml-2"></i>
         </div>
-        <div class="component-card-indice">
-            <CardIndices />
-        </div>
+
+            <section v-for="papel in papeis" :key="papel.ticker" >
+                <div
+                    class="component-card-indice"
+                >
+                    <CardIndices
+                        :indRealTime="papel.indRealTime"
+                    >
+                    </CardIndices>
+                </div>
+
+            </section>
+     
     </div>
 </template>
 
@@ -15,7 +25,12 @@ import CardIndices from "@/components/CardIndices";
 
 export default {
     components: { CardIndices },
-};
+    computed: {
+        papeis() {
+            return this.$store.state.papeis;
+        }, 
+    }
+}    
 </script>
 
 <style lang="scss">
