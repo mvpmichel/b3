@@ -1,15 +1,11 @@
 <template>
     <div class="container-indiceCard-geral">
-        <div
-            class="container-indice-card"
-            v-for="ativo in ativos"
-            :key="ativo.ticker"
-        >
+        <div class="container-indice-card">
             <div class="indice-card-logo mt-5">
-                <img :src="`img/${ativo.logo}`" />
+                <img :src="`img/${logo}`" />
             </div>
             <div class="indice-card-empresa">
-                {{ ativo.nome | firstUp }}
+                {{ nome | firstUp }}
             </div>
             <div class="indice-card-valor">
                 <b> R$ </b>
@@ -23,7 +19,7 @@
 import axios from "axios";
 
 export default {
-    props: ['indRealTime'],
+    props: ['logo','ticker','nome','indRealTime'],
     data() {
         return {
             indice: '',
@@ -67,6 +63,7 @@ export default {
         background-color: white;
         border-radius: 10px;
         border: 5px solid $cinzaFundo;
+        padding: 20px;
     }
 
     .indice-card-logo {
